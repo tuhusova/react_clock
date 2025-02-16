@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Clock } from './component/Clock';
 import './App.scss';
 
 function getRandomName(): string {
-  const value = Date.now().toString().slice(-4);
-  return `Clock-${value}`;
+  return `Clock-${Date.now().toString().slice(-4)}`;
 }
 
 type AppState = {
@@ -12,7 +11,7 @@ type AppState = {
   clockName: string;
 };
 
-export class App extends Component<{}, AppState> {
+export class App extends React.Component<{}, AppState> {
   private nameTimerId: number | null = null;
 
   state: AppState = {
@@ -22,14 +21,10 @@ export class App extends Component<{}, AppState> {
 
   componentDidMount(): void {
     this.nameTimerId = window.setInterval(() => {
-      this.setState(prevState => {
-        const newClockName = getRandomName();
-
-        // eslint-disable-next-line no-console
-        console.warn(`Renamed from ${prevState.clockName} to ${newClockName}`);
-
-        return { clockName: newClockName };
-      });
+      const newClockName = getRandomName();
+      this.setState(prevState => (
+        prevState.clockName !== newClockName ? { clockName: newClockName } : null
+      ));
     }, 3300);
 
     document.addEventListener('contextmenu', this.hideClock);
@@ -63,5 +58,3 @@ export class App extends Component<{}, AppState> {
     );
   }
 }
-
-
